@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ブラホックを外すアプリ ♡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;family=Playfair+Display:wght@700&amp;display=swap');
+
+        body {
+            font-family: 'Noto Sans JP', system-ui, sans-serif;
+        }
+
+        .title-font {
+            font-family: 'Playfair Display', 'Noto Sans JP', serif;
+            letter-spacing: 2px;
+        }
+
+        .stage {
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4),
+                0 10px 10px -6px rgb(0 0 0 / 0.4);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .stage:hover {
+            box-shadow: 0 35px 60px -15px rgb(0 0 0 / 0.5);
+        }
+
+        .girl-img {
+            transition: opacity 0.4s ease, filter 0.3s ease;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .hook-area {
+            transition: all 0.2s ease;
+            animation: pulse-hook 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .hook-area:hover {
+            transform: scale(1.1) !important;
+            filter: brightness(1.2);
+        }
+
+        .hook-area:active {
+            transform: scale(0.92) !important;
+        }
+
+        @keyframes pulse-hook {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(249, 168, 212, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 0 12px rgba(249, 168, 212, 0);
+            }
+        }
+
+        .floating-text {
+            animation: float-up-text 0.9s ease-out forwards;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        @keyframes float-up-text {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-70px) scale(0.85);
+                opacity: 0;
+            }
+        }
+
+        .falling-bra {
+            animation: fall-bra-anim 1.6s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+            z-index: 40;
+            filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.3));
+        }
+
+        @keyframes fall-bra-anim {
+            0% {
+                transform: translate(-50%, -50%) rotate(-8deg) scale(1);
+                opacity: 1;
+            }
+
+            40% {
+                transform: translate(-50%, 40%) rotate(12deg) scale(0.95);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, 220%) rotate(35deg) scale(0.6);
+                opacity: 0;
+            }
+        }
+
+        .girl-container {
+            will-change: transform;
+        }
+
+        .shake {
+            animation: shake-anim 0.35s ease;
+        }
+
+        @keyframes shake-anim {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-4px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(4px);
+            }
+        }
+
+        .progress-bar {
+            transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .sexy-bg {
+            background: linear-gradient(180deg, #1a1625 0%, #120f1f 100%);
+        }
+
+        .heart {
+            animation: heart-beat 1.5s ease infinite;
+        }
+
+        .difficulty-btn {
+            transition: all 0.2s ease;
+        }
+
+        .difficulty-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+        }
+    </style>
+</head>
+
+<body class="sexy-bg min-h-screen text-white overflow-x-hidden">
+    <!-- Difficulty Selection Screen -->
+    <div id="difficulty-screen" class="max-w-2xl mx-auto pt-12 pb-12 px-6">
+        <div class="text-center mb-10">
+            <div class="flex items-center justify-center gap-x-3 mb-4">
+                <i class="fa-solid fa-heart text-pink-400 text-4xl heart"></i>
+                <h1
+                    class="title-font text-6xl font-bold tracking-wider bg-gradient-to-r from-pink-300 via-rose-400 to-pink-300 bg-clip-text text-transparent">
+                    ブラホックを外す
+                </h1>
+                <i class="fa-solid fa-heart text-pink-400 text-4xl heart"></i>
+            </div>
+            <p class="text-pink-200/80 text-xl">難易度を選んでチャレンジしよう♡</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+            <button onclick="selectDifficulty('normal')"
+                class="difficulty-btn group px-8 py-8 bg-white/10 hover:bg-white/15 border-2 border-white/30 hover:border-pink-400/60 rounded-3xl text-center transition-all">
+                <div class="mb-4"><i
+                        class="fa-solid fa-smile text-5xl text-emerald-400 group-hover:scale-110 transition-transform"></i>
+                </div>
+                <div class="text-3xl font-bold mb-2">普通</div>
+                <div class="text-pink-200/70 text-sm mb-4">タップ位置：固定</div>
+                <div class="text-xs px-4 py-1 bg-emerald-500/20 text-emerald-300 rounded-full inline-block">初心者おすすめ
+                </div>
+            </button>
+
+            <button onclick="selectDifficulty('hard')"
+                class="difficulty-btn group px-8 py-8 bg-white/10 hover:bg-white/15 border-2 border-white/30 hover:border-pink-400/60 rounded-3xl text-center transition-all">
+                <div class="mb-4"><i
+                        class="fa-solid fa-meh text-5xl text-amber-400 group-hover:scale-110 transition-transform"></i>
+                </div>
+                <div class="text-3xl font-bold mb-2">難しい</div>
+                <div class="text-pink-200/70 text-sm mb-4">タップ位置：一定方向に移動（反射）</div>
+                <div class="text-xs px-4 py-1 bg-amber-500/20 text-amber-300 rounded-full inline-block">中級者向け</div>
+            </button>
+
+            <button onclick="selectDifficulty('oni')"
+                class="difficulty-btn group px-8 py-8 bg-white/10 hover:bg-white/15 border-2 border-white/30 hover:border-pink-400/60 rounded-3xl text-center transition-all">
+                <div class="mb-4"><i
+                        class="fa-solid fa-skull text-5xl text-red-400 group-hover:scale-110 transition-transform"></i>
+                </div>
+                <div class="text-3xl font-bold mb-2">鬼</div>
+                <div class="text-pink-200/70 text-sm mb-4">タップ位置：タップでジャンプ</div>
+                <div class="text-xs px-4 py-1 bg-red-500/20 text-red-300 rounded-full inline-block">上級者・鬼畜</div>
+            </button>
+        </div>
+
+        <div class="text-center mt-10 text-pink-200/60 text-sm">
+            難しいモードはホックが一定方向に移動し、端で反射します<br>
+            タイムを競って全5人をクリアしよう！
+        </div>
+    </div>
+
+    <!-- Main Game Screen -->
+    <div id="game-screen" class="hidden max-w-2xl mx-auto px-6 pb-12">
+        <div class="flex items-center justify-between mb-4 px-1">
+            <div class="flex items-center gap-x-2">
+                <div
+                    class="px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-2xl flex items-center gap-x-2 border border-white/20">
+                    <i class="fa-solid fa-user text-pink-400"></i>
+                    <span class="font-medium">女の子 <span id="girl-num" class="font-bold text-pink-300">1</span>/5</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-x-3">
+                <div
+                    class="px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-2xl flex items-center gap-x-2 border border-white/20">
+                    <i class="fa-solid fa-clock text-pink-400"></i>
+                    <span id="timer" class="font-mono font-bold text-pink-300">00:00</span>
+                </div>
+
+                <div
+                    class="px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-2xl flex items-center gap-x-2 border border-white/20">
+                    <i class="fa-solid fa-hand-pointer text-pink-400"></i>
+                    <span class="font-medium">タップ <span id="tap-count" class="font-bold text-pink-300">0</span>/<span
+                            id="max-taps">5</span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-5 px-1">
+            <div class="flex justify-between text-xs mb-1.5 px-0.5 text-pink-200/70">
+                <div>ホック解除進捗</div>
+                <div id="progress-text">0%</div>
+            </div>
+            <div class="h-2.5 bg-white/10 rounded-full overflow-hidden border border-white/20">
+                <div id="progress-bar"
+                    class="progress-bar h-full bg-gradient-to-r from-pink-400 to-rose-400 rounded-full w-0 shadow-[0_0_8px_rgb(244,114,182)]"
+                    style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div id="stage"
+            class="stage relative w-full max-w-[400px] h-[600px] mx-auto rounded-3xl overflow-hidden border border-pink-900/60 bg-zinc-950">
+            <div id="girl-container" class="girl-container absolute inset-0">
+                <img id="girl-img" class="girl-img w-full h-full object-cover" alt="女の子の後ろ姿（ブラ着用）">
+                <div id="hook-area"
+                    class="hook-area absolute z-30 flex flex-col items-center justify-center cursor-pointer select-none"
+                    style="left: 47%; top: 52%; width: 68px; height: 68px; transform: translate(-50%, -50%);">
+                    <div class="relative flex flex-col items-center">
+                        <div
+                            class="w-9 h-9 bg-gradient-to-br from-rose-300 to-pink-400 rounded-full flex items-center justify-center shadow-lg shadow-pink-500/50 border-2 border-white/90">
+                            <i class="fa-solid fa-link text-white text-xl drop-shadow-md"></i>
+                        </div>
+                        <div
+                            class="mt-1 px-3 py-0.5 bg-black/70 backdrop-blur-sm rounded-full border border-pink-400/60">
+                            <span class="text-[10px] font-bold tracking-[1.5px] text-pink-100">ホックをタップ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute inset-0 pointer-events-none z-10"
+                style="background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.25) 75%, rgba(0,0,0,0.45) 100%);">
+            </div>
+        </div>
+
+        <div class="text-center mt-5 text-sm text-pink-200/60">
+            <i class="fa-solid fa-info-circle mr-1.5"></i>
+            ブラのホックを<span class="font-semibold text-pink-300">何度もタップ</span>して外してね
+        </div>
+
+        <div class="flex justify-center gap-x-3 mt-6">
+            <button onclick="restartApp()"
+                class="px-5 py-2.5 text-sm flex items-center gap-x-2 bg-white/10 hover:bg-white/15 active:bg-white/20 transition-colors border border-white/30 rounded-2xl text-pink-100">
+                <i class="fa-solid fa-redo mr-1"></i>
+                <span>最初から</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="clear-modal" class="hidden fixed inset-0 bg-black/90 z-[100] flex items-center justify-center">
+        <div class="max-w-md w-full mx-4 text-center">
+            <div class="mb-6"><i class="fa-solid fa-heart text-7xl text-pink-400 heart"></i></div>
+            <h2 class="text-4xl font-bold mb-2 tracking-wider">クリア！</h2>
+            <p class="text-2xl text-pink-300 mb-1">5人の女の子のブラを</p>
+            <p class="text-2xl text-pink-300 mb-4">全部外しました♡</p>
+
+            <div class="mb-6 px-6 py-4 bg-white/10 rounded-2xl border border-white/20">
+                <div class="text-pink-200/70 text-sm mb-1">所要時間</div>
+                <div id="clear-time" class="text-5xl font-bold text-white font-mono tracking-wider">00:00</div>
+            </div>
+
+            <div class="text-pink-200/70 mb-8 text-sm leading-relaxed">
+                お疲れ様でした…<br>
+                みんなとても喜んでるみたいです💕
+            </div>
+
+            <div class="flex flex-col gap-y-3">
+                <button onclick="restartApp()"
+                    class="w-full py-4 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 active:scale-[0.985] transition-all text-white font-bold text-lg rounded-2xl shadow-lg flex items-center justify-center gap-x-2">
+                    <i class="fa-solid fa-play mr-2"></i>
+                    <span>もう一度プレイする</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentGirl = 0;
+        let taps = 0;
+        let MAX_TAPS = 5;
+        const MAX_GIRLS = 5;
+        let startTime = null;
+        let timerInterval = null;
+        let currentDifficulty = 'normal';
+        let hardMoveInterval = null;
+        let dx = 0;
+        let dy = 0;
+
+        const girlData = [
+            { name: "黒髪ロングの女の子", withBra: "./img/withBra_00.jpg", withoutBra: "./img/withoutBra_00.jpg" },
+            { name: "金髪の元気な女の子", withBra: "./img/withBra_01.jpg", withoutBra: "./img/withoutBra_01.jpg" },
+            { name: "ピンク髪の可愛い女の子", withBra: "./img/withBra_02.jpg", withoutBra: "./img/withoutBra_02.jpg" },
+            { name: "銀髪のクールな女の子", withBra: "./img/withBra_03.jpg", withoutBra: "./img/withoutBra_03.jpg" },
+            { name: "茶髪の優しい女の子", withBra: "./img/withBra_04.jpg", withoutBra: "./img/withoutBra_04.jpg" }
+        ];
+
+        const floatingTexts = ["んっ…", "あっ！", "んんっ♡", "もっと…", "はぁ…", "んふっ", "あんっ…", "もう少し…", "きもちいい…"];
+
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            return audioCtx;
+        }
+
+        function playTapSound() {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const filter = ctx.createBiquadFilter();
+                osc.type = 'sine'; osc.frequency.value = 920;
+                filter.type = 'lowpass'; filter.frequency.value = 1800;
+                gain.gain.value = 0.35;
+                const decay = ctx.createGain();
+                osc.connect(filter); filter.connect(decay); decay.connect(gain); gain.connect(ctx.destination);
+                osc.start();
+                gain.gain.setValueAtTime(0.35, ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+                setTimeout(() => osc.stop(), 200);
+            } catch (e) { }
+        }
+
+        function playUnhookSound() {
+            try {
+                const ctx = getAudioContext();
+                const osc1 = ctx.createOscillator(); const osc2 = ctx.createOscillator(); const gain = ctx.createGain();
+                osc1.type = 'sawtooth'; osc1.frequency.value = 620;
+                osc2.type = 'sine'; osc2.frequency.value = 380;
+                gain.gain.value = 0.6;
+                osc1.connect(gain); osc2.connect(gain); gain.connect(ctx.destination);
+                osc1.start(); osc2.start();
+                gain.gain.setValueAtTime(0.6, ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+                setTimeout(() => { osc1.stop(); osc2.stop(); }, 650);
+            } catch (e) { }
+        }
+
+        function playWhooshSound() {
+            try {
+                const ctx = getAudioContext();
+                const noise = ctx.createBufferSource();
+                const buffer = ctx.createBuffer(1, ctx.sampleRate * 1.2, ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+                noise.buffer = buffer;
+                const filter = ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 1200;
+                const gain = ctx.createGain(); gain.gain.value = 0.25;
+                const decay = ctx.createGain(); decay.gain.value = 1;
+                noise.connect(filter); filter.connect(decay); decay.connect(gain); gain.connect(ctx.destination);
+                noise.start();
+                decay.gain.setValueAtTime(1, ctx.currentTime);
+                decay.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 1.1);
+                setTimeout(() => noise.stop(), 1200);
+            } catch (e) { }
+        }
+
+        function createFloatingText(text, clickEvent = null, isBig = false) {
+            const stage = document.getElementById('stage');
+            const textEl = document.createElement('div');
+            textEl.textContent = text;
+            textEl.className = `floating-text absolute font-bold text-pink-300 pointer-events-none select-none ${isBig ? 'text-3xl' : 'text-xl'}`;
+            if (clickEvent && clickEvent.clientX) {
+                const rect = stage.getBoundingClientRect();
+                textEl.style.left = `${clickEvent.clientX - rect.left}px`;
+                textEl.style.top = `${clickEvent.clientY - rect.top - 15}px`;
+            } else {
+                textEl.style.left = '50%';
+                textEl.style.top = '48%';
+                textEl.style.transform = 'translate(-50%, -50%)';
+            }
+            if (isBig) textEl.style.textShadow = '0 0 12px rgb(244 114 182 / 0.6)';
+            stage.appendChild(textEl);
+            setTimeout(() => { if (textEl.parentNode) textEl.parentNode.removeChild(textEl); }, isBig ? 1400 : 950);
+        }
+
+        function createFallingBra() {
+            const stage = document.getElementById('stage');
+            const bra = document.createElement('div');
+            bra.className = 'falling-bra absolute text-[72px] pointer-events-none';
+            bra.style.left = '48%';
+            bra.style.top = '54%';
+            bra.style.transform = 'translate(-50%, -50%)';
+            bra.innerHTML = '👙';
+            stage.appendChild(bra);
+            setTimeout(() => playWhooshSound(), 80);
+            bra.addEventListener('animationend', () => { if (bra.parentNode) bra.parentNode.removeChild(bra); });
+            setTimeout(() => createFloatingText("ぽとっ…♡", null, false), 1350);
+        }
+
+        function updateUI() {
+            document.getElementById('tap-count').textContent = taps;
+            document.getElementById('girl-num').textContent = currentGirl + 1;
+            document.getElementById('max-taps').textContent = MAX_TAPS;
+
+            const progressPercent = Math.min((taps / MAX_TAPS) * 100, 100);
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+            document.getElementById('progress-text').textContent = `${Math.floor(progressPercent)}%`;
+
+            const hookArea = document.getElementById('hook-area');
+            const label = hookArea.querySelector('span');
+            if (taps >= Math.floor(MAX_TAPS * 0.6) && label) {
+                label.textContent = 'もう少し！';
+                label.style.color = '#fda4af';
+            } else if (label) {
+                label.textContent = 'ホックをタップ';
+                label.style.color = '';
+            }
+        }
+
+        function moveHookLinear() {
+            if (currentDifficulty !== 'hard') return;
+
+            const hookArea = document.getElementById('hook-area');
+            const stage = document.getElementById('stage');
+            const stageRect = stage.getBoundingClientRect();
+
+            let left = parseFloat(hookArea.style.left) || stageRect.width * 0.47;
+            let top = parseFloat(hookArea.style.top) || stageRect.height * 0.52;
+
+            // シンプル移動: left += dx; top += dy;
+            left += dx;
+            top += dy;
+
+            const hookWidth = 68;
+            const hookHeight = 68;
+
+            // 端で反射
+            if (left < 40) {
+                left = 40;
+                dx = -dx;
+            }
+            if (left + hookWidth > stageRect.width - 40) {
+                left = stageRect.width - hookWidth - 40;
+                dx = -dx;
+            }
+            if (top < 60) {
+                top = 60;
+                dy = -dy;
+            }
+            if (top + hookHeight > stageRect.height - 60) {
+                top = stageRect.height - hookHeight - 60;
+                dy = -dy;
+            }
+
+            hookArea.style.transition = 'none';
+            hookArea.style.left = `${left}px`;
+            hookArea.style.top = `${top}px`;
+            hookArea.style.transform = 'translate(-50%, -50%)';
+        }
+
+        function startHardModeMovement() {
+            if (hardMoveInterval) clearInterval(hardMoveInterval);
+
+            const hookArea = document.getElementById('hook-area');
+            const stage = document.getElementById('stage');
+            const stageRect = stage.getBoundingClientRect();
+
+            // 初期位置
+            let left = stageRect.width * 0.47;
+            let top = stageRect.height * 0.52;
+            hookArea.style.left = `${left}px`;
+            hookArea.style.top = `${top}px`;
+            hookArea.style.transform = 'translate(-50%, -50%)';
+
+            // dx, dy をランダムに初期化（一定速度）
+            dx = (Math.random() * 3 + 2) * (Math.random() > 0.5 ? 1 : -1);
+            dy = (Math.random() * 3 + 2) * (Math.random() > 0.5 ? 1 : -1);
+
+            // 定期的に移動
+            hardMoveInterval = setInterval(moveHookLinear, 30);
+        }
+
+        function stopHardModeMovement() {
+            if (hardMoveInterval) {
+                clearInterval(hardMoveInterval);
+                hardMoveInterval = null;
+            }
+        }
+
+        function loadGirl(index) {
+            if (index < 0 || index >= MAX_GIRLS) return;
+
+            currentGirl = index;
+            taps = 0;
+
+            stopHardModeMovement();
+
+            const girl = girlData[index];
+            const img = document.getElementById('girl-img');
+            const hookArea = document.getElementById('hook-area');
+
+            img.style.transition = 'none';
+            img.style.opacity = '1';
+            img.style.filter = 'contrast(1.15) saturate(1.1)';
+            img.src = girl.withBra;
+
+            hookArea.style.display = 'flex';
+            hookArea.style.pointerEvents = 'auto';
+            hookArea.style.opacity = '1';
+
+            if (currentDifficulty === 'normal') {
+                hookArea.style.left = '47%';
+                hookArea.style.top = '52%';
+                hookArea.style.transform = 'translate(-50%, -50%)';
+            } else if (currentDifficulty === 'hard') {
+                startHardModeMovement();
+            } else if (currentDifficulty === 'oni') {
+                const stageRect = document.getElementById('stage').getBoundingClientRect();
+                const left = Math.random() * (stageRect.width * 0.7) + (stageRect.width * 0.15);
+                const top = Math.random() * (stageRect.height * 0.65) + (stageRect.height * 0.2);
+                hookArea.style.left = `${left}px`;
+                hookArea.style.top = `${top}px`;
+                hookArea.style.transform = 'translate(-50%, -50%)';
+            }
+
+            updateUI();
+
+            img.style.animation = 'none';
+            setTimeout(() => img.style.animation = 'fadeIn 0.5s ease', 10);
+        }
+
+        function updateTimer() {
+            if (!startTime) return;
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const min = Math.floor(elapsed / 60);
+            const sec = elapsed % 60;
+            document.getElementById('timer').textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 1000);
+            updateTimer();
+        }
+
+        function stopTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        function getElapsedTime() {
+            if (!startTime) return 0;
+            return Math.floor((Date.now() - startTime) / 1000);
+        }
+
+        function formatTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = seconds % 60;
+            return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        function unhookBra() {
+            const img = document.getElementById('girl-img');
+            const hookArea = document.getElementById('hook-area');
+            const girl = girlData[currentGirl];
+
+            stopHardModeMovement();
+
+            hookArea.style.pointerEvents = 'none';
+            hookArea.style.transition = 'opacity 0.3s ease';
+            hookArea.style.opacity = '0';
+
+            playUnhookSound();
+            createFloatingText("外れた♡", null, true);
+
+            img.style.transition = 'opacity 0.35s ease';
+            img.style.opacity = '0.15';
+
+            setTimeout(() => {
+                if (girl.withoutBra) img.src = girl.withoutBra;
+                img.style.transition = 'opacity 0.6s ease';
+                img.style.opacity = '1';
+                img.style.filter = 'contrast(1.05) saturate(0.95)';
+            }, 380);
+
+            setTimeout(() => createFallingBra(), 420);
+
+            setTimeout(() => {
+                if (currentGirl < MAX_GIRLS - 1) {
+                    slideToNextGirl();
+                } else {
+                    stopTimer();
+                    showClearModal();
+                }
+            }, 1950);
+        }
+
+        function slideToNextGirl() {
+            const container = document.getElementById('girl-container');
+            container.style.transition = 'transform 0.55s cubic-bezier(0.32, 0, 0.67, 1)';
+            container.style.transform = 'translateX(-115%)';
+
+            container.addEventListener('transitionend', function handler() {
+                container.removeEventListener('transitionend', handler);
+                currentGirl++;
+                loadGirl(currentGirl);
+                container.style.transition = 'none';
+                container.style.transform = 'translateX(115%)';
+                void container.offsetWidth;
+                container.style.transition = 'transform 0.55s cubic-bezier(0.32, 0, 0.67, 1)';
+                container.style.transform = 'translateX(0)';
+                setTimeout(() => {
+                    const hook = document.getElementById('hook-area');
+                    hook.style.transition = '';
+                    hook.style.opacity = '1';
+                    hook.style.pointerEvents = 'auto';
+                }, 300);
+            }, { once: true });
+        }
+
+        function handleHookClick(e) {
+            if (taps >= MAX_TAPS) return;
+
+            const hookArea = document.getElementById('hook-area');
+
+            if (currentDifficulty === 'oni') {
+                const stage = document.getElementById('stage');
+                const stageRect = stage.getBoundingClientRect();
+                const newLeft = Math.random() * (stageRect.width * 0.7) + (stageRect.width * 0.15);
+                const newTop = Math.random() * (stageRect.height * 0.65) + (stageRect.height * 0.2);
+
+                hookArea.style.transition = 'all 0.18s cubic-bezier(0.4, 0, 0.2, 1)';
+                hookArea.style.left = `${newLeft}px`;
+                hookArea.style.top = `${newTop}px`;
+                hookArea.style.transform = 'translate(-50%, -50%)';
+
+                setTimeout(() => {
+                    if (hookArea) hookArea.style.transition = 'all 0.2s ease';
+                }, 250);
+            }
+
+            taps++;
+            updateUI();
+
+            playTapSound();
+
+            const img = document.getElementById('girl-img');
+            img.classList.add('shake');
+            setTimeout(() => img.classList.remove('shake'), 380);
+
+            const randomText = floatingTexts[Math.floor(Math.random() * floatingTexts.length)];
+            createFloatingText(randomText, e);
+
+            hookArea.style.transform = 'translate(-50%, -50%) scale(0.85)';
+            setTimeout(() => {
+                if (hookArea) hookArea.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 120);
+
+            if (taps >= MAX_TAPS) {
+                setTimeout(() => unhookBra(), 280);
+            }
+        }
+
+        function showClearModal() {
+            const modal = document.getElementById('clear-modal');
+            const timeEl = document.getElementById('clear-time');
+            timeEl.textContent = formatTime(getElapsedTime());
+
+            modal.style.display = 'flex';
+            modal.classList.remove('hidden');
+
+            setTimeout(() => createFloatingText("お疲れ様♡", null, true), 600);
+        }
+
+        function selectDifficulty(level) {
+            currentDifficulty = level;
+
+            if (level === 'normal') MAX_TAPS = 5;
+            else if (level === 'hard') MAX_TAPS = 8;
+            else if (level === 'oni') MAX_TAPS = 12;
+
+            document.getElementById('difficulty-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+
+            currentGirl = 0;
+            taps = 0;
+
+            startTimer();
+            loadGirl(0);
+            document.getElementById('max-taps').textContent = MAX_TAPS;
+        }
+
+        function restartApp() {
+            stopHardModeMovement();
+            stopTimer();
+
+            const modal = document.getElementById('clear-modal');
+            modal.style.display = 'none';
+            modal.classList.add('hidden');
+
+            document.getElementById('difficulty-screen').classList.remove('hidden');
+            document.getElementById('game-screen').classList.add('hidden');
+
+            currentGirl = 0;
+            taps = 0;
+            startTime = null;
+            document.getElementById('timer').textContent = '00:00';
+        }
+
+        function stopHardModeMovement() {
+            if (hardMoveInterval) {
+                clearInterval(hardMoveInterval);
+                hardMoveInterval = null;
+            }
+        }
+
+        function initHookListener() {
+            const hookArea = document.getElementById('hook-area');
+            hookArea.addEventListener('click', handleHookClick);
+            hookArea.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                handleHookClick(e.touches[0] || e);
+            }, { passive: false });
+
+            hookArea.setAttribute('tabindex', '0');
+            hookArea.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleHookClick(e);
+                }
+            });
+        }
+
+        function initKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                if (e.key.toLowerCase() === 'r') restartApp();
+                if (e.key.toLowerCase() === 'b' && taps < MAX_TAPS) {
+                    taps = MAX_TAPS;
+                    updateUI();
+                    setTimeout(unhookBra, 80);
+                }
+            });
+        }
+
+        function init() {
+            initHookListener();
+            initKeyboardShortcuts();
+
+            document.getElementById('difficulty-screen').classList.remove('hidden');
+            document.getElementById('game-screen').classList.add('hidden');
+
+            console.log('%c[ブラホックアプリ] dx/dy 反射移動版（難しいモード）', 'color:#f9a8d4');
+        }
+
+        window.onload = init;
+    </script>
+</body>
+
+</html>
