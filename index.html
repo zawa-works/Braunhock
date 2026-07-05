@@ -154,53 +154,55 @@
 
 <body class="sexy-bg min-h-screen text-white overflow-x-hidden overflow-y-hidden">
     <!-- Difficulty Selection Screen -->
-    <div id="difficulty-screen" class="max-w-2xl mx-auto pt-12 pb-12 px-6">
-        <div class="text-center mb-10">
-            <div class="flex items-center justify-center gap-x-3 mb-4">
-                <i class="fa-solid fa-heart text-pink-400 text-4xl heart"></i>
+    <div id="difficulty-screen" class="max-w-2xl mx-auto pt-4 pb-4 px-6">
+        <div class="text-center mb-6">
+            <div class="flex items-center justify-center gap-x-3 mb-3">
+                <i class="fa-solid fa-heart text-pink-400 text-3xl heart"></i>
                 <h1
-                    class="title-font text-6xl font-bold tracking-wider bg-gradient-to-r from-pink-300 via-rose-400 to-pink-300 bg-clip-text text-transparent">
+                    class="title-font text-4xl md:text-5xl font-bold tracking-wider bg-gradient-to-r from-pink-300 via-rose-400 to-pink-300 bg-clip-text text-transparent">
                     ブラホックを外す
                 </h1>
-                <i class="fa-solid fa-heart text-pink-400 text-4xl heart"></i>
+                <i class="fa-solid fa-heart text-pink-400 text-3xl heart"></i>
             </div>
-            <p class="text-pink-200/80 text-xl">難易度を選んでチャレンジしよう♡</p>
+            <p class="text-pink-200/80 text-base">難易度を選んでチャレンジしよう♡</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-3xl mx-auto">
             <button onclick="selectDifficulty('normal')"
-                class="difficulty-btn group px-8 py-8 bg-white/10 hover:bg-white/15 border-2 border-white/30 hover:border-pink-400/60 rounded-3xl text-center transition-all">
-                <div class="mb-4"><i
-                        class="fa-solid fa-smile text-5xl text-emerald-400 group-hover:scale-110 transition-transform"></i>
+                class="difficulty-btn group px-5 py-4 bg-white/10 hover:bg-white/15 border-2 border-white/30 hover:border-pink-400/60 rounded-3xl text-center transition-all">
+                <div class="mb-3"><i
+                        class="fa-solid fa-smile text-4xl text-emerald-400 group-hover:scale-110 transition-transform"></i>
                 </div>
-                <div class="text-3xl font-bold mb-2">普通</div>
-                <div class="text-pink-200/70 text-sm mb-4">タップ位置：固定</div>
-                <div class="text-xs px-4 py-1 bg-emerald-500/20 text-emerald-300 rounded-full inline-block">初心者おすすめ
+                <div class="text-2xl font-bold mb-1">普通</div>
+                <div class="text-pink-200/70 text-xs mb-2">タップ位置：固定</div>
+                <div class="text-[10px] px-3 py-0.5 bg-emerald-500/20 text-emerald-300 rounded-full inline-block">
+                    初心者おすすめ
                 </div>
             </button>
 
             <button onclick="selectDifficulty('hard')"
-                class="difficulty-btn group px-8 py-8 bg-white/10 hover:bg-white/15 border-2 border-white/30 hover:border-pink-400/60 rounded-3xl text-center transition-all">
-                <div class="mb-4"><i
-                        class="fa-solid fa-meh text-5xl text-amber-400 group-hover:scale-110 transition-transform"></i>
+                class="difficulty-btn group px-5 py-4 bg-white/10 hover:bg-white/15 border-2 border-white/30 hover:border-pink-400/60 rounded-3xl text-center transition-all">
+                <div class="mb-3"><i
+                        class="fa-solid fa-meh text-4xl text-amber-400 group-hover:scale-110 transition-transform"></i>
                 </div>
-                <div class="text-3xl font-bold mb-2">難しい</div>
-                <div class="text-pink-200/70 text-sm mb-4">タップ位置：一定方向に移動（反射）</div>
-                <div class="text-xs px-4 py-1 bg-amber-500/20 text-amber-300 rounded-full inline-block">中級者向け</div>
+                <div class="text-2xl font-bold mb-1">難しい</div>
+                <div class="text-pink-200/70 text-xs mb-2">タップ位置：一定方向に移動（反射）</div>
+                <div class="text-[10px] px-3 py-0.5 bg-amber-500/20 text-amber-300 rounded-full inline-block">中級者向け
+                </div>
             </button>
 
             <button onclick="selectDifficulty('oni')"
-                class="difficulty-btn group px-8 py-8 bg-white/10 hover:bg-white/15 border-2 border-white/30 hover:border-pink-400/60 rounded-3xl text-center transition-all">
-                <div class="mb-4"><i
-                        class="fa-solid fa-skull text-5xl text-red-400 group-hover:scale-110 transition-transform"></i>
+                class="difficulty-btn group px-5 py-4 bg-white/10 hover:bg-white/15 border-2 border-white/30 hover:border-pink-400/60 rounded-3xl text-center transition-all">
+                <div class="mb-3"><i
+                        class="fa-solid fa-skull text-4xl text-red-400 group-hover:scale-110 transition-transform"></i>
                 </div>
-                <div class="text-3xl font-bold mb-2">鬼</div>
-                <div class="text-pink-200/70 text-sm mb-4">タップ位置：タップでジャンプ</div>
-                <div class="text-xs px-4 py-1 bg-red-500/20 text-red-300 rounded-full inline-block">上級者・鬼畜</div>
+                <div class="text-2xl font-bold mb-1">鬼</div>
+                <div class="text-pink-200/70 text-xs mb-2">タップ位置：タップでジャンプ</div>
+                <div class="text-[10px] px-3 py-0.5 bg-red-500/20 text-red-300 rounded-full inline-block">上級者・鬼畜</div>
             </button>
         </div>
 
-        <div class="text-center mt-10 text-pink-200/60 text-sm">
+        <div class="text-center mt-8 text-pink-200/60 text-xs">
             難しいモードはホックが一定方向に移動し、端で反射します<br>
             タイムを競って全5人をクリアしよう！
         </div>
@@ -452,14 +454,12 @@
             let left = parseFloat(hookArea.style.left) || stageRect.width * 0.47;
             let top = parseFloat(hookArea.style.top) || stageRect.height * 0.52;
 
-            // シンプル移動: left += dx; top += dy;
             left += dx;
             top += dy;
 
             const hookWidth = 68;
             const hookHeight = 68;
 
-            // 端で反射
             if (left < 40) {
                 left = 40;
                 dx = -dx;
@@ -490,18 +490,15 @@
             const stage = document.getElementById('stage');
             const stageRect = stage.getBoundingClientRect();
 
-            // 初期位置
             let left = stageRect.width * 0.47;
             let top = stageRect.height * 0.52;
             hookArea.style.left = `${left}px`;
             hookArea.style.top = `${top}px`;
             hookArea.style.transform = 'translate(-50%, -50%)';
 
-            // dx, dy をランダムに初期化（一定速度）
             dx = (Math.random() * 3 + 2) * (Math.random() > 0.5 ? 1 : -1);
             dy = (Math.random() * 3 + 2) * (Math.random() > 0.5 ? 1 : -1);
 
-            // 定期的に移動
             hardMoveInterval = setInterval(moveHookLinear, 30);
         }
 
