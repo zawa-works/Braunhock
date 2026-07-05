@@ -251,7 +251,7 @@
                 <img id="girl-img" class="girl-img w-full h-full object-cover" alt="女の子の後ろ姿（ブラ着用）">
                 <div id="hook-area"
                     class="hook-area absolute z-30 flex flex-col items-center justify-center cursor-pointer select-none"
-                    style="left: 47%; top: 52%; width: 68px; height: 68px; transform: translate(-50%, -50%);">
+                    style="left: 47%; top: 70%; width: 78px; height: 78px; transform: translate(-50%, -50%);">
                     <div class="relative flex flex-col items-center">
                         <div
                             class="w-9 h-9 bg-gradient-to-br from-rose-300 to-pink-400 rounded-full flex items-center justify-center shadow-lg shadow-pink-500/50 border-2 border-white/90">
@@ -435,11 +435,9 @@
 
             const hookArea = document.getElementById('hook-area');
             const label = hookArea.querySelector('span');
-            if (taps >= Math.floor(MAX_TAPS * 0.6) && label) {
-                label.textContent = 'もう少し！';
-                label.style.color = '#fda4af';
-            } else if (label) {
-                label.textContent = 'ホックをタップ';
+            if (label) {
+                label.style.fontSize = '8px';
+                label.innerHTML = 'ホックを<br>タップ';
                 label.style.color = '';
             }
         }
